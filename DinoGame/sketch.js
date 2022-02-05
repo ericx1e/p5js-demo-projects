@@ -10,7 +10,7 @@ let ob2x;
 let ob3x;
 
 let obW = 50; //obstacle width
-let obH = 100; //obstacle height
+let obH = 50; //obstacle height
 let obSpeed = 9; //obstacle speed
 
 function setup() {
@@ -28,6 +28,11 @@ function draw() {
     noStroke();
     fill(51);
     rect(0, height - groundHeight, width, groundHeight);
+
+    //Display score
+    fill(0);
+    textSize(50);
+    text("Score: " + score, 50, 70);
 
     //Draw player
     fill(255, 150, 100);
@@ -63,11 +68,27 @@ function draw() {
         score++;
         ob3x = width + random(0, 200);
     }
+
+    //Check player collision with obstacles
+    //Next line is scary, but it's just three of the same thing to check if any of the obstacles are touching the player
+    if(isTouching(100, playerY, playerSize, playerSize, ob1x, height - groundHeight - obH, obW, obH)||isTouching(100, playerY, playerSize, playerSize, ob2x, height - groundHeight - obH, obW, obH)||isTouching(100, playerY, playerSize, playerSize, ob3x, height - groundHeight - obH, obW, obH)) {
+        noStroke();
+        fill(0); //black
+        textSize(100);
+        textAlign(CENTER, CENTER);
+        text("GAME OVER", width/2, height/4);
+        noLoop();
+    }
 }
 
 function keyPressed() {
     if (playerY + playerSize >= height - groundHeight) { //the player should only be able to jump when touching the ground
-        ySpeed = -15; //remember, negative is up in this case
+        ySpeed = -12; //remember, negative is up in this case
         playerY += ySpeed;
     }
 }
+
+function isTouching(x1, y1, w1, h1, x2, y2, w2, h2) {
+    return x1 < x2 + w2 && x1 + w1 > x2 && y1 < y2 + h2 &&  y1 + h1 > y2;
+}
+//hello
